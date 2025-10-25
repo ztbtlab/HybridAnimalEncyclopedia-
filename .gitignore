@@ -16,7 +16,6 @@ yarn-error.log*
 
 # Cloudflare build artifacts
 .next-on-pages
-wrangler.toml
 .open-next/
 
 # Misc
