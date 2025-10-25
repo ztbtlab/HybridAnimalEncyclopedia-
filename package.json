@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cf-build": "opennextjs-cloudflare build"
+    "cf-build": "opennextjs-cloudflare build && cp .open-next/worker.js .open-next/_worker.js"
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",
