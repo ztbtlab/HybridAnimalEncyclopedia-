@@ -8,9 +8,29 @@ export default function GalleryPage() {
   const [q, setQ] = useState('');
   const [tag, setTag] = useState<string | null>(null);
   const [active, setActive] = useState<GalleryItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/gallery').then(r => r.json()).then(d => setItems(d.items || []));
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const r = await fetch('/api/gallery');
+        if (!r.ok) {
+          const text = await r.text().catch(() => '');
+          throw new Error(`API ${r.status}${text ? `: ${text}` : ''}`);
+        }
+        const d = await r.json();
+        setItems(d.items || []);
+      } catch (e: any) {
+        console.error('gallery fetch failed:', e);
+        setError(e?.message ?? 'Fetch failed');
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
   const allTags = useMemo(() => {
@@ -40,6 +60,17 @@ export default function GalleryPage() {
           タグやキーワードで検索して、いろんな合体動物のストーリーを見つけよう！
         </p>
 
+        {error && (
+          <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200">
+            データの取得に失敗しました：{error}
+          </div>
+        )}
+        {loading && (
+          <div className="mb-4 text-sm text-gray-600 dark:text-neutral-300">
+            読み込み中…
+          </div>
+        )}
+
         <div className="mb-8 flex flex-col gap-4 rounded-3xl bg-white/80 p-4 shadow-lg shadow-emerald-200/40 backdrop-blur dark:bg-neutral-900/90 dark:shadow-none sm:flex-row sm:items-center">
           <div className="flex-1">
             <label className="block text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">
@@ -67,8 +98,9 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        <div className="grid gap-5 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          {filtered.map(item => (
+        {!loading && (
+          <div className="grid gap-5 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            {filtered.map(item => (
             <button
               key={item.id}
               className="group relative overflow-hidden rounded-3xl bg-white/90 p-3 text-left shadow-md shadow-emerald-200/40 transition-transform hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-300/60 dark:bg-neutral-900/80 dark:shadow-none"
@@ -105,8 +137,9 @@ export default function GalleryPage() {
                 </div>
               )}
             </button>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {filtered.length === 0 && (
           <div className="mt-12 rounded-3xl border border-dashed border-emerald-300/70 bg-white/70 p-8 text-center text-sm text-emerald-600 dark:border-emerald-700 dark:bg-neutral-900/70 dark:text-emerald-200">
