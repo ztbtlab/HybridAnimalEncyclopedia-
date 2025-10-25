@@ -1,5 +1,12 @@
 name = "hybrid-animal-encyclopedia"
-main = "./.open-next/worker.js"
+main = "./.open-next/_worker.js"
 compatibility_date = "2024-04-05"
 compatibility_flags = ["nodejs_compat"]
-workers_dev = true
+workers_dev = false
+
+[build]
+command = "npm run cf-build"
+
+[pages]
+pages_build_output_dir = ".open-next/assets"
+pages_functions_dir = ".open-next"
