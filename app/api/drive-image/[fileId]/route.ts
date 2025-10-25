@@ -2,6 +2,8 @@ import { google } from 'googleapis';
 import type { NextRequest } from 'next/server';
 import { getJwtAuth } from '@/lib/google';
 
+export const runtime = 'nodejs';
+
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ fileId?: string }> }

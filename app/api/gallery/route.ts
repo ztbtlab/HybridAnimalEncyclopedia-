@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { getJwtAuth } from '@/lib/google';
 import type { GalleryItem } from '@/lib/types';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   const sheetId = process.env.SHEET_ID;
   const hasCreds = process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY;
