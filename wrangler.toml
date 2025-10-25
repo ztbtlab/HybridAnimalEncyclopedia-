@@ -7,6 +7,5 @@ workers_dev = false
 [build]
 command = "npm run cf-build"
 
-[pages]
 pages_build_output_dir = ".open-next/assets"
 pages_functions_dir = ".open-next"
